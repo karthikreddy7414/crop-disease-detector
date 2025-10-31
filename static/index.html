@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Disease Detection System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto 30px auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .upload-area {
+            border: 3px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background-color: #f7fafc;
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background-color: #e6fffa;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #a0aec0;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .results {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-online {
+            background-color: #48bb78;
+        }
+
+        .status-offline {
+            background-color: #f56565;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 Crop Disease Detection System</h1>
+            <p>AI-powered image analysis for identifying crop diseases - 76.2% accuracy on 25 disease types</p>
+        </div>
+
+        <!-- Image Analysis Card - Full Width -->
+        <div class="card" style="max-width: 800px; margin: 0 auto;">
+            <h2>📸 Crop Disease Detection</h2>
+            <p style="color: #666; margin-bottom: 20px;">Upload a crop image to identify diseases using AI (76.2% accuracy on 25 disease classes)</p>
+            
+            <div class="upload-area" id="image-upload" onclick="document.getElementById('image-file').click()">
+                <div class="upload-icon" id="upload-icon">📁</div>
+                <p id="upload-text">Click to upload crop image or drag & drop</p>
+                <img id="preview-image" style="display: none; max-width: 100%; max-height: 300px; margin-top: 10px; border-radius: 10px;" />
+                <input type="file" id="image-file" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+            </div>
+            <div class="form-group">
+                <label for="image-crop-type">Crop Type:</label>
+                <select id="image-crop-type">
+                    <option value="apple">Apple</option>
+                    <option value="blueberry">Blueberry</option>
+                    <option value="cherry">Cherry</option>
+                    <option value="corn">Corn</option>
+                    <option value="grape">Grape</option>
+                    <option value="orange">Orange</option>
+                    <option value="peach">Peach</option>
+                    <option value="pepper">Pepper</option>
+                    <option value="potato">Potato</option>
+                    <option value="raspberry">Raspberry</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" onclick="analyzeImage()">Analyze Image</button>
+            <div id="image-results" class="results" style="display: none;"></div>
+        </div>
+
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing your request...</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let uploadedImage = null;
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                uploadedImage = file;
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('upload-icon').style.display = 'none';
+                    document.getElementById('upload-text').innerHTML = `<strong>✅ Image uploaded: ${file.name}</strong>`;
+                    const previewImg = document.getElementById('preview-image');
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function analyzeImage() {
+            if (!uploadedImage) {
+                alert('Please upload an image first');
+                return;
+            }
+
+            const cropType = document.getElementById('image-crop-type').value;
+            showLoading(true);
+
+            try {
+                const formData = new FormData();
+                formData.append('image', uploadedImage);
+                formData.append('crop_type', cropType);
+
+                const response = await fetch(`${API_BASE}/api/image/preprocess`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                displayImageResults(result);
+            } catch (error) {
+                displayError('image-results', 'Failed to analyze image: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+
+        function displayImageResults(result) {
+            const resultsDiv = document.getElementById('image-results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `
+                <h3>📸 Image Analysis Results</h3>
+                <p><strong>Disease Detected:</strong> ${result.disease_detected || 'None'}</p>
+                <p><strong>Confidence:</strong> ${result.confidence || 'N/A'}%</p>
+                <p><strong>Severity:</strong> ${result.severity || 'Low'}</p>
+                <p><strong>Affected Area:</strong> ${result.affected_area || 'N/A'}%</p>
+                <p><strong>Treatment Recommendation:</strong> ${result.treatment || 'Monitor plant health'}</p>
+            `;
+        }
+
+
+        function displayError(elementId, message) {
+            const resultsDiv = document.getElementById(elementId);
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `
+                <h3>❌ Error</h3>
+                <p style="color: red;">${message}</p>
+            `;
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        // Drag and drop functionality
+        const uploadArea = document.getElementById('image-upload');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                uploadedImage = files[0];
+                uploadArea.innerHTML = `
+                    <div class="upload-icon">✅</div>
+                    <p>Image uploaded: ${files[0].name}</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

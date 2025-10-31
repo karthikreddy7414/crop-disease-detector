@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+.venv/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Large Datasets (don't push to GitHub)
+data/images/raw/PlantVillage/
+data/images/raw/PlantVillage-Dataset-temp/
+data/images/raw/Corn/
+data/images/raw/Potato/
+data/images/raw/Rice/
+data/images/raw/Tomato/
+data/images/raw/Wheat/
+
+# Training Data (can be regenerated)
+data/training/*.npy
+data/tmp/
+
+# Trained Models (too large for GitHub - retrain locally)
+models/real_trained/*.joblib
+models/*.joblib
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Documentation (local only)
+docs/_build/
+

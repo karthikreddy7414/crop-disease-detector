@@ -1,0 +1,24 @@
+{
+  "num_samples": 5000,
+  "dna_feature_dim": 29,
+  "image_feature_dim": 11,
+  "disease_classes": [
+    "healthy",
+    "rust",
+    "powdery_mildew",
+    "fusarium_wilt",
+    "bacterial_blight",
+    "late_blight",
+    "anthracnose",
+    "leaf_spot",
+    "mosaic_virus",
+    "root_rot"
+  ],
+  "crop_types": [
+    "tomato",
+    "rice",
+    "wheat",
+    "corn",
+    "potato"
+  ]
+}

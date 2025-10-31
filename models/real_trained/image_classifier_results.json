@@ -1,0 +1,11 @@
+{
+  "random_forest": {
+    "accuracy": 0.7622832369942196
+  },
+  "gradient_boosting": {
+    "accuracy": 0.7174855491329479
+  },
+  "svm": {
+    "accuracy": 0.6994219653179191
+  }
+}
