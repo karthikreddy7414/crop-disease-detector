@@ -1,0 +1,34 @@
+{
+  "class_names": [
+    "Apple___Apple_scab",
+    "Apple___healthy",
+    "Corn_(maize)___Common_rust_",
+    "Corn_(maize)___healthy",
+    "Grape___Black_rot",
+    "Grape___healthy",
+    "Potato___Early_blight",
+    "Potato___Late_blight",
+    "Potato___healthy",
+    "Pepper,_bell___healthy"
+  ],
+  "label_map": {
+    "0": "Apple___Apple_scab",
+    "1": "Apple___healthy",
+    "2": "Corn_(maize)___Common_rust_",
+    "3": "Corn_(maize)___healthy",
+    "4": "Grape___Black_rot",
+    "5": "Grape___healthy",
+    "6": "Potato___Early_blight",
+    "7": "Potato___Late_blight",
+    "8": "Potato___healthy",
+    "9": "Pepper,_bell___healthy"
+  },
+  "num_classes": 10,
+  "num_samples": 1952,
+  "train_size": 1561,
+  "test_size": 391,
+  "accuracy": 0.8235294117647058,
+  "model_type": "lightweight",
+  "training_date": "2025-11-01T02:45:08.115045",
+  "duration": "0:00:08.850111"
+}

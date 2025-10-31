@@ -22,7 +22,8 @@ feature_extractor = ImageFeatureExtractor()
 segmenter = CropSegmentation()
 
 # Load trained models
-MODEL_PATH = Path("models/real_trained")
+# Try lightweight model first (for deployment), fallback to real_trained
+MODEL_PATH = Path("models/lightweight") if Path("models/lightweight").exists() else Path("models/real_trained")
 image_classifier = None
 image_scaler = None
 class_names = []
