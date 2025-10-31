@@ -33,8 +33,8 @@ AI-powered image analysis system for identifying crop diseases with **76.2% accu
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
-cd DNA-crop
+git clone https://github.com/karthikreddy7414/crop-disease-detector.git
+cd crop-disease-detector
 
 # Install dependencies
 pip install -r requirements.txt
@@ -42,6 +42,19 @@ pip install -r requirements.txt
 # Start the web server
 python -m uvicorn src.main:app --host 127.0.0.1 --port 8000 --reload
 ```
+
+### Deploy to Render (Cloud Hosting)
+
+1. Go to https://render.com and sign in with GitHub
+2. Click "New +" → "Web Service"
+3. Connect your repository: `crop-disease-detector`
+4. Configure:
+   - **Build Command:** `pip install -r requirements-render.txt`
+   - **Start Command:** `uvicorn src.main:app --host 0.0.0.0 --port $PORT`
+   - **Instance Type:** Free
+5. Click "Create Web Service"
+
+Your app will be live at: `https://crop-disease-detector.onrender.com`
 
 ### Usage
 
