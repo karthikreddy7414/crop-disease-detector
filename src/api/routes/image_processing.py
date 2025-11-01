@@ -129,6 +129,21 @@ async def preprocess(image: UploadFile = File(...), crop_type: str = "rice") -> 
         else:
             severity = "Low"
         
+        # Calculate affected area based on disease presence and confidence
+        # If healthy, affected area is 0
+        # Otherwise, estimate based on confidence level
+        if 'healthy' in predicted_disease.lower():
+            affected_area = 0.0
+        else:
+            # Estimate affected area: confidence * severity multiplier
+            # Low severity: 10-30%, Medium: 30-60%, High: 60-90%
+            if severity == "High":
+                affected_area = confidence * 75  # 60-90% range
+            elif severity == "Medium":
+                affected_area = confidence * 45  # 30-60% range
+            else:
+                affected_area = confidence * 20  # 10-30% range
+        
         return {
             "preprocessing_status": "completed",
             "image_shape": [128, 128, 3],
@@ -142,7 +157,7 @@ async def preprocess(image: UploadFile = File(...), crop_type: str = "rice") -> 
             "disease_detected": predicted_disease,
             "confidence": f"{confidence*100:.1f}",
             "severity": severity,
-            "affected_area": "0.0",
+            "affected_area": f"{affected_area:.1f}",
             "treatment": f"Disease: {predicted_disease}. Confidence: {confidence:.1%}. {'Apply appropriate treatment for ' + predicted_disease if confidence > 0.5 else 'Monitor plant health'}",
             "crop_type": crop_type,
             "prediction": {
