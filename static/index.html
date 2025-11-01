@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Crop Disease Detection System</title>
     <style>
         * {
@@ -284,18 +287,27 @@
                 formData.append('image', uploadedImage);
                 formData.append('crop_type', cropType);
 
+                console.log('API_BASE:', API_BASE);
+                console.log('Sending request to:', `${API_BASE}/api/image/preprocess`);
+
                 const response = await fetch(`${API_BASE}/api/image/preprocess`, {
                     method: 'POST',
                     body: formData
                 });
                 
+                console.log('Response status:', response.status);
+                
                 if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
                     throw new Error(`Server error: ${response.status} ${response.statusText}`);
                 }
                 
                 const result = await response.json();
+                console.log('Success result:', result);
                 displayImageResults(result);
             } catch (error) {
+                console.error('Full error:', error);
                 displayError('image-results', 'Failed to analyze image: ' + error.message);
             } finally {
                 showLoading(false);
