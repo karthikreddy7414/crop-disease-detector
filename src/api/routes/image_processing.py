@@ -23,13 +23,29 @@ segmenter = CropSegmentation()
 
 # Load trained models
 # Try lightweight model first (for deployment), fallback to real_trained
-MODEL_PATH = Path("models/lightweight") if Path("models/lightweight").exists() else Path("models/real_trained")
 image_classifier = None
 image_scaler = None
 class_names = []
 
+# Try to load models (lightweight first, then real_trained)
 try:
-    if MODEL_PATH.exists():
+    # Check lightweight models first (for Render deployment)
+    lightweight_path = Path("models/lightweight")
+    real_trained_path = Path("models/real_trained")
+    
+    if (lightweight_path / "image_classifier.joblib").exists():
+        # Load lightweight models (GitHub-compatible)
+        MODEL_PATH = lightweight_path
+        image_classifier = joblib.load(MODEL_PATH / "image_classifier.joblib")
+        image_scaler = joblib.load(MODEL_PATH / "image_scaler.joblib")
+        import json
+        with open(MODEL_PATH / "metadata.json") as f:
+            metadata = json.load(f)
+            class_names = metadata['class_names']
+        print(f"✓ Loaded lightweight models with {len(class_names)} classes")
+    elif (real_trained_path / "image_classifier_best.joblib").exists():
+        # Load full models (local development)
+        MODEL_PATH = real_trained_path
         image_classifier = joblib.load(MODEL_PATH / "image_classifier_best.joblib")
         image_scaler = joblib.load(MODEL_PATH / "image_scaler.joblib")
         import json
@@ -38,7 +54,7 @@ try:
             class_names = metadata['class_names']
         print(f"✓ Loaded real-trained models with {len(class_names)} classes")
     else:
-        print("⚠ Real-trained models not found, using fallback")
+        print("⚠ No trained models found, using fallback predictions")
 except Exception as e:
     print(f"⚠ Error loading models: {e}")
 

@@ -248,7 +248,8 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8000';
+        // Use current domain for API calls (works locally and on Render)
+        const API_BASE = window.location.origin;
         let uploadedImage = null;
 
         function handleImageUpload(event) {
@@ -287,6 +288,10 @@
                     method: 'POST',
                     body: formData
                 });
+                
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                }
                 
                 const result = await response.json();
                 displayImageResults(result);

@@ -47,7 +47,9 @@ data/tmp/
 
 # Trained Models (too large for GitHub - retrain locally)
 models/real_trained/*.joblib
-models/*.joblib
+
+# Keep lightweight models for deployment (small enough for Git)
+!models/lightweight/*.joblib
 
 # OS
 .DS_Store
